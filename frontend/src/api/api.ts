@@ -352,3 +352,26 @@ export const historyMessageFeedback = async (messageId: string, feedback: string
     })
   return response
 }
+
+export const updateDataSourceInBackend = async (dataSource: string): Promise<Response> => {
+  const response = await fetch('/update_datasource', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ datasource: dataSource })
+  })
+    .then(res => {
+      return res
+    })
+    .catch(_err => {
+      console.error('There was an issue updating the data source.')
+      const errRes: Response = {
+        ...new Response(),
+        ok: false,
+        status: 500
+      }
+      return errRes
+    })
+  return response
+}
