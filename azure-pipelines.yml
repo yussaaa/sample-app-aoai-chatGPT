@@ -11,85 +11,25 @@ variables:
   environmentName: 'th-cl-ragpoc-webapp-rg1-JS'
   vmImageName: 'ubuntu-latest'
   workingDirectory: '$(System.DefaultWorkingDirectory)'
+  imageRepository: 'yussaaa/th-chatbot' 
+  imageTag: 'amd64' 
 
-jobs:
-- job: Build_Frontend
-  displayName: 'Build Frontend'
-  steps:
-    - task: NodeTool@0
-      inputs:
-        versionSpec: '16.x'
-      displayName: 'Install Node.js'
+steps:
+- checkout: self
 
-    - script: |
-        echo "Restoring frontend npm packages"
-        cd frontend
-        npm install
-        npm run build
-      displayName: 'Build Frontend'
+# # Build the Docker image (optional if you're using a pre-built public image)
+# - task: Docker@2
+#   displayName: 'Build Docker Image'
+#   inputs:
+#     command: 'build'
+#     repository: '$(imageRepository)'
+#     dockerfile: 'WebApp.Dockerfile' # Only needed if you're building an image
+#     tags: |
+#       $(imageTag)
 
-    - task: CopyFiles@2
-      inputs:
-        contents: |
-          frontend/**   
-          static/**           
-        targetFolder: '$(Build.ArtifactStagingDirectory)/frontend'
-      displayName: 'Copy Frontend and Static Files'
-
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: '$(Build.ArtifactStagingDirectory)/frontend'
-        artifactName: 'frontend'
-      displayName: 'Publish Frontend Artifacts'
-
-- job: Build_Backend
-  displayName: 'Build Backend'
-  dependsOn: Build_Frontend
-  steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
-      displayName: 'Use Python Version'
-
-    - script: |
-        python -m venv .venv
-        source .venv/bin/activate
-        pip install -r requirements.txt
-      displayName: 'Install Backend Dependencies'
-
-    - script: |
-        # Run loadenv.sh if necessary
-        source ./scripts/loadenv.sh || echo "No loadenv.sh script found"
-      displayName: 'Load Environment Variables'
-
-    - task: CopyFiles@2
-      inputs:
-        contents: '**'
-        targetFolder: '$(Build.ArtifactStagingDirectory)/backend'
-      displayName: 'Copy Backend Files'
-
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: '$(Build.ArtifactStagingDirectory)/backend'
-        artifactName: 'backend'
-      displayName: 'Publish Backend Artifacts'
-
-- job: Deploy
-  displayName: 'Deploy to Azure App Service'
-  dependsOn: [Build_Frontend, Build_Backend]
-  steps:
-    - download: current
-      artifact: 'frontend'
-      displayName: 'Download Frontend Artifact'
-
-    - download: current
-      artifact: 'backend'
-      displayName: 'Download Backend Artifact'
-
-    - task: AzureWebApp@1
-      inputs:
-        azureSubscription: '$(azureSubscription)'
-        appName: '$(webAppName)'
-        package: '$(Build.ArtifactStagingDirectory)'
-        environmentName: '$(environmentName)'
-      displayName: 'Deploy to Azure App Service'
+- task: AzureWebAppContainer@1
+  displayName: 'Deploy Public Docker Image to Azure App Service'
+  inputs:
+    azureSubscription: '$(azureSubscription)'
+    appName: '$(webAppName)'
+    imageName: '$(imageRepository):$(imageTag)'
