@@ -7,6 +7,7 @@ import { CosmosDBStatus } from '../../api'
 import Contoso from '../../assets/Contoso.svg'
 import { HistoryButton, ShareButton } from '../../components/common/Button'
 import { AppStateContext } from '../../state/AppProvider'
+import { DataSourceSidebar } from '../../components/Sidebar/Sidebar'
 
 import styles from './Layout.module.css'
 
@@ -20,6 +21,12 @@ const Layout = () => {
   const [logo, setLogo] = useState('')
   const appStateContext = useContext(AppStateContext)
   const ui = appStateContext?.state.frontendSettings?.ui
+  const [selectedDataSource, setSelectedDataSource] = useState<string>('source1');
+
+  const handleDataSourceChange = (dataSource: string) => {
+    setSelectedDataSource(dataSource);
+    // Additional logic to handle data source change can be added here
+  };
 
   const handleShareClick = () => {
     setIsSharePanelOpen(true)
@@ -94,7 +101,15 @@ const Layout = () => {
           </Stack>
         </Stack>
       </header>
-      <Outlet />
+      <div className={styles.mainContainer}>
+         <DataSourceSidebar
+              selectedDataSource={selectedDataSource}
+              onDataSourceChange={handleDataSourceChange}
+            /> 
+        <main className={styles.contentArea}>
+          <Outlet />
+        </main>
+      </div>
       <Dialog
         onDismiss={handleSharePanelDismiss}
         hidden={!isSharePanelOpen}

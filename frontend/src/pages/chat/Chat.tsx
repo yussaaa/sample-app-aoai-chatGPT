@@ -38,7 +38,6 @@ import { QuestionInput } from "../../components/QuestionInput";
 import { ChatHistoryPanel } from "../../components/ChatHistory/ChatHistoryPanel";
 import { AppStateContext } from "../../state/AppProvider";
 import { useBoolean } from "@fluentui/react-hooks";
-import { DataSourceSidebar } from '../../components/Sidebar/Sidebar'
 
 const enum messageStatus {
   NotRunning = 'Not Running',
@@ -66,12 +65,6 @@ const Chat = () => {
   const [errorMsg, setErrorMsg] = useState<ErrorMessage | null>()
   const [logo, setLogo] = useState('')
   const [answerId, setAnswerId] = useState<string>('')
-  const [selectedDataSource, setSelectedDataSource] = useState<string>('source1');
-
-  const handleDataSourceChange = (dataSource: string) => {
-    setSelectedDataSource(dataSource);
-    // Additional logic to handle data source change can be added here
-  };
 
   const errorDialogContentProps = {
     type: DialogType.close,
@@ -795,11 +788,7 @@ const Chat = () => {
         </Stack>
       ) : (
         <Stack horizontal className={styles.chatRoot}>
-            <DataSourceSidebar
-              selectedDataSource={selectedDataSource}
-              onDataSourceChange={handleDataSourceChange}
-            />          
-            <div className={styles.chatContainer}>
+          <div className={styles.chatContainer}>
             {!messages || messages.length < 1 ? (
               <Stack className={styles.chatEmptyState}>
                 <img src={logo} className={styles.chatIcon} aria-hidden="true" />

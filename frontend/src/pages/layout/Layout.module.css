@@ -109,3 +109,91 @@
     margin-left: 26px;
   }
 }
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.mainContainer {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #f8f8f8;
+  border-right: 1px solid #e0e0e0;
+  height: 100%;
+  transition: width 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.collapsed {
+  width: 48px;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebarTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.collapseButton {
+  padding: 4px;
+  min-width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.collapseButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.sidebarNav {
+  padding: 16px;
+}
+
+.sidebarItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 5px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.sidebarItem:hover {
+  background-color: #eee;
+}
+
+.selected {
+  background-color: #e0e0e0;
+  font-weight: bold;
+}
+
+.contentArea {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
