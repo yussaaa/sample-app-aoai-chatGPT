@@ -22,6 +22,7 @@ export const DataSourceSidebar: React.FC<DataSourceSidebarProps> = ({
   onDataSourceChange,
 }) => {
   const navigate = useNavigate();
+  const appStateContext = useContext(AppStateContext)
   const { dispatch } = useContext(AppStateContext) ?? { dispatch: () => {} };
 
   const handleDataSourceChange = async (key: string) => {
@@ -36,6 +37,7 @@ export const DataSourceSidebar: React.FC<DataSourceSidebarProps> = ({
         navigate('/chat');
         await updateDataSourceInBackend(key);
         console.log(`Data source updated successfully to ${key}`);
+        appStateContext?.dispatch({ type: 'UPDATE_CURRENT_CHAT', payload: null });
         
       }
       // Log the current state after all updates
