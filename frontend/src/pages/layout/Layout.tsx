@@ -4,7 +4,7 @@ import { Dialog, Stack, TextField } from '@fluentui/react'
 import { CopyRegular } from '@fluentui/react-icons'
 
 import { CosmosDBStatus } from '../../api'
-import Contoso from '../../assets/Contoso.svg'
+import Logo from '../../../public/toronto-hydro-logo.png'
 import { HistoryButton, ShareButton } from '../../components/common/Button'
 import { AppStateContext } from '../../state/AppProvider'
 import { DataSourceSidebar } from '../../components/Sidebar/Sidebar'
@@ -21,12 +21,8 @@ const Layout = () => {
   const [logo, setLogo] = useState('')
   const appStateContext = useContext(AppStateContext)
   const ui = appStateContext?.state.frontendSettings?.ui
-  const [selectedDataSource, setSelectedDataSource] = useState<string>('source1');
+  const { state, dispatch } = appStateContext || { state: {}, dispatch: () => {} };
 
-  const handleDataSourceChange = (dataSource: string) => {
-    setSelectedDataSource(dataSource);
-    // Additional logic to handle data source change can be added here
-  };
 
   const handleShareClick = () => {
     setIsSharePanelOpen(true)
@@ -49,7 +45,7 @@ const Layout = () => {
 
   useEffect(() => {
     if (!appStateContext?.state.isLoading) {
-      setLogo(ui?.logo || Contoso)
+      setLogo(ui?.logo || Logo)
     }
   }, [appStateContext?.state.isLoading])
 
@@ -102,10 +98,10 @@ const Layout = () => {
         </Stack>
       </header>
       <div className={styles.mainContainer}>
-         <DataSourceSidebar
-              selectedDataSource={selectedDataSource}
-              onDataSourceChange={handleDataSourceChange}
-            /> 
+        <DataSourceSidebar
+          selectedDataSource={state.selectedDataSource || ''}
+          onDataSourceChange={(key) => dispatch({ type: 'SET_DATA_SOURCE', payload: key })}
+        />
         <main className={styles.contentArea}>
           <Outlet />
         </main>

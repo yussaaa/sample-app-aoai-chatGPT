@@ -82,6 +82,11 @@ export const appStateReducer = (state: AppState, action: Action): AppState => {
           [action.payload.answerId]: action.payload.exec_result
         }
       }
+    case 'SET_DATA_SOURCE':
+      return {
+        ...state,
+        selectedDataSource: action.payload
+      };
     default:
       return state
   }

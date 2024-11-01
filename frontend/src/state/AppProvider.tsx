@@ -30,6 +30,8 @@ export interface AppState {
   feedbackState: { [answerId: string]: Feedback.Neutral | Feedback.Positive | Feedback.Negative }
   isLoading: boolean;
   answerExecResult: { [answerId: string]: [] }
+  selectedDataSource?: string;
+
 }
 
 export type Action =
@@ -51,6 +53,7 @@ export type Action =
   }
   | { type: 'GET_FEEDBACK_STATE'; payload: string }
   | { type: 'SET_ANSWER_EXEC_RESULT'; payload: { answerId: string, exec_result: [] } }
+  | { type: 'SET_DATA_SOURCE'; payload: string }
 
 const initialState: AppState = {
   isChatHistoryOpen: false,
@@ -66,6 +69,7 @@ const initialState: AppState = {
   feedbackState: {},
   isLoading: true,
   answerExecResult: {},
+  selectedDataSource: ''
 }
 
 export const AppStateContext = createContext<

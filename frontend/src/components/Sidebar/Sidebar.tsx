@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
-import { Stack, ChoiceGroup, IChoiceGroupOption, mergeStyles } from '@fluentui/react';
-import styles from './SideBar.css';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Stack, ChoiceGroup, IChoiceGroupOption, mergeStyles, DefaultButton } from '@fluentui/react';
+import styles from './Sidebar.module.css';
 import { updateDataSourceInBackend } from '../../api';
-
-const sidebarClass = mergeStyles({
-  // Add your styles here
-  // For example:
-  padding: '20px',
-  backgroundColor: '#f0f0f0',
-});
+import { AppStateContext } from '../../state/AppProvider';
 
 interface DataSourceSidebarProps {
   selectedDataSource: string;
@@ -16,34 +11,58 @@ interface DataSourceSidebarProps {
 }
 
 const dataSources: IChoiceGroupOption[] = [
-  { key: 'img-oeb-test', text: 'OEB' },
-  { key: 'img-eng-test', text: 'Engineering Docs' },
-  { key: 'th-web', text: 'TH Website' },
+  { key: 'home', text: '🏠 Home' },
+  { key: 'img-oeb-test', text: '💬 OEB' },
+  { key: 'img-eng-test', text: '💬 Engineering Docs' },
+  { key: 'th-web', text: '💬 TH Website' },
 ];
 
 export const DataSourceSidebar: React.FC<DataSourceSidebarProps> = ({
   selectedDataSource,
   onDataSourceChange,
 }) => {
-  const handleDataSourceChange = async (dataSource: string) => {
-    onDataSourceChange(dataSource);
+  const navigate = useNavigate();
+  const { dispatch } = useContext(AppStateContext) ?? { dispatch: () => {} };
+
+  const handleDataSourceChange = async (key: string) => {
     try {
-      await updateDataSourceInBackend(dataSource);
-      console.log(`Data source updated successfully to ${dataSource}`);
+      dispatch({ 
+        type: 'SET_DATA_SOURCE', 
+        payload: key 
+      });
+      if (key === 'home') {
+        navigate('/');
+      } else {
+        navigate('/chat');
+        await updateDataSourceInBackend(key);
+        console.log(`Data source updated successfully to ${key}`);
+        
+      }
+      // Log the current state after all updates
+      console.log('Final data source state:', {
+        selectedDataSource: key,
+        backendUpdated: key !== 'home'
+      });
+      
+      onDataSourceChange(key);
     } catch (error) {
-      // Handle the error as needed, e.g., show a notification to the user
       console.error('Failed to update data source:', error);
     }
   };
 
   return (
-    <Stack className={sidebarClass}>
-      <h2>Select Data Source</h2>
-      <ChoiceGroup
-        selectedKey={selectedDataSource}
-        options={dataSources}
-        onChange={(_, option) => option && handleDataSourceChange(option.key)}
-      />
+    <Stack className={styles.sidebar}>
+      {/* <h2>Select Data Source</h2> */}
+      <div className={styles.buttonContainer}>
+        {dataSources.map((source) => (
+          <DefaultButton
+            key={source.key}
+            text={source.text}
+            className={selectedDataSource === source.key ? styles.buttonSelected : styles.button}
+            onClick={() => handleDataSourceChange(source.key)}
+          />
+        ))}
+      </div>
     </Stack>
   );
 };
