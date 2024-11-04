@@ -2,6 +2,11 @@ import React from 'react';
 import { Lock, MessageSquare, BarChart2 } from 'react-feather';
 import styles from './Home.module.css';
 
+import azureLogo from '../../assets/azure-svgrepo-com.svg'
+import openaiLogo from '../../assets/openai-svgrepo-com.svg'
+import pythonLogo from '../../assets/python-svgrepo-com.svg'
+import langchainLogo from '../../assets/langchain-seeklogo.svg'
+import torontoHydroLogo from '../../assets/toronto-hydro-logo.png'
 interface Feature {
   icon: React.ReactNode;
   title: string;
@@ -33,7 +38,7 @@ const Home: React.FC = () => {
         <div className={styles.header}>
           <h1 className={styles.welcomeText}>Welcome to the Gen AI Lab!</h1>
           <img 
-            src="/toronto-hydro-logo.png" 
+            src={torontoHydroLogo}
             alt="Toronto Hydro" 
             className={styles.companyLogo}
           />
@@ -59,10 +64,10 @@ const Home: React.FC = () => {
         <div className={styles.footer}>
           <p className={styles.poweredBy}>
             Powered by
-            <img src="/azure-svgrepo-com.svg" alt="Azure" className={styles.logo} />
-            <img src="/openai-svgrepo-com.svg" alt="OpenAI" className={styles.logo} />
-            <img src="/python-svgrepo-com.svg" alt="Python" className={styles.logo} />
-            <img src="/langchain-seeklogo.svg" alt="Langchain" className={styles.logo} />
+            <img src={azureLogo} alt="Azure" className={styles.logo} />
+            <img src={openaiLogo} alt="OpenAI" className={styles.logo} />
+            <img src={pythonLogo} alt="Python" className={styles.logo} />
+            <img src={langchainLogo} alt="Langchain" className={styles.logo} />
           </p>
         </div>
       </div>
